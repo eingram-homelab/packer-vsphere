@@ -99,7 +99,7 @@ done
 
 ## CI/CD Pipelines
 
-All three workflows call reusable workflows from `eingram-homelab/reusable_workflows`:
+All three workflows call reusable workflows from `eingram-homelab/reusable-workflows`:
 
 | Workflow | Trigger | Action |
 |----------|---------|--------|
