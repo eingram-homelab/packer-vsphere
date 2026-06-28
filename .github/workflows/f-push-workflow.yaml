@@ -1,12 +1,10 @@
 ---
-name: Push Workflow
+name: Feature Branch Push Workflow
 
 on:
   push:
     branches-ignore:
       - main
-    paths:
-      - '**.pkr.hcl'
 
 jobs:
   validate:
@@ -14,3 +12,11 @@ jobs:
     name: Validate Packer Project
     secrets:
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+
+  gate:
+    if: ${{ always() }}
+    needs: validate
+    runs-on: arc-runners
+    steps:
+      - name: Always succeed
+        run: exit 0
