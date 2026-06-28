@@ -23,7 +23,7 @@ jobs:
     needs: changes
     if: needs.changes.outputs.packer == 'true'
     name: Validate Packer Project
-    uses: eingram-homelab/reusable_workflows/.github/workflows/_packer-validate.yaml@main
+    uses: eingram-homelab/reusable-workflows/.github/workflows/_packer-validate.yaml@main
     secrets:
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
 

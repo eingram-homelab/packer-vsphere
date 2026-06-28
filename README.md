@@ -98,7 +98,7 @@ Run `packer fmt <os>/` (without `-check`) to auto-fix formatting.
 
 Validation runs `packer fmt -check`, `packer init`, and `packer validate` against each changed template directory. The build pipeline additionally installs `xorriso` (required for Windows ISO builds) and calls `scripts/publish_template.ps1` to promote the new template in vCenter.
 
-Workflows are self-hosted on `arc-runners` and call reusable workflows from [eingram-homelab/reusable_workflows](https://github.com/eingram-homelab/reusable_workflows).
+Workflows are self-hosted on `arc-runners` and call reusable workflows from [eingram-homelab/reusable-workflows](https://github.com/eingram-homelab/reusable-workflows).
 
 Required secrets/variables:
 - `VAULT_TOKEN` (secret)
