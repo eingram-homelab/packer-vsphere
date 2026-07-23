@@ -1,37 +1,20 @@
 ---
-name: Release Workflow
-
+name: Release Workflow / Packer
 on:
   push:
     branches:
       - main
-    paths:
-      - '**.pkr.hcl'
-  workflow_dispatch:
-    inputs:
-      directories:
-        description: 'Space-separated list of packer directories to build (e.g. rocky9 rocky10). Required when running manually.'
-        required: true
-        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
-  validate:
-    uses: eingram-homelab/reusable-workflows/.github/workflows/_packer-build.yaml@main
-    name: Build vSphere Template
+  packer-build:
+    name: Packer Release Workflow
+    uses: eingram-homelab/reusable-workflows/.github/workflows/_flattened-packer-release-workflow.yaml@main
     with:
-      directories: ${{ inputs.directories || '' }}
+      repository: ${{ github.repository }}
+      ref: ${{ github.head_ref || github.ref_name }}
     secrets:
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-      GCP_STORAGE: ${{ secrets.GCP_STORAGE }}
-
-  gate:
-    needs: build
-    if: always()
-    runs-on: arc-runners
-    steps:
-      - name: Check validation result
-        run: |
-          result="${{ needs.build.result }}"
-          if [[ "$result" == "failure" || "$result" == "cancelled" ]]; then
-            exit 1
-          fi
