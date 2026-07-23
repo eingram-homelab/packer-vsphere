@@ -1,6 +1,5 @@
 ---
-name: Feature Branch Workflow / GitHub Actions
-
+name: Feature Branch Workflow / Packer
 on:
   push:
     branches-ignore:
