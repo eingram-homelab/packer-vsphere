@@ -16,5 +16,6 @@ jobs:
     with:
       repository: ${{ github.repository }}
       ref: ${{ github.head_ref || github.ref_name }}
+      skip_build: false
     secrets:
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
