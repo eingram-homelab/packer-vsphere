@@ -1,4 +1,4 @@
-# Update this line to trigger build 
+# Update this line to trigger build
 
 local "vsphere_username" {
   expression = vault("/secret/vsphere/vcsa", "vsphere_username")
