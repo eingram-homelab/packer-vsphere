@@ -17,7 +17,7 @@ vm_name    = "TMP-Win2022_Packer"
 vm_network = "DPG-Lab-LAN1"
 
 vm_guest_os_type = "windows2019srvNext_64Guest" # Refer to https://code.vmware.com/apis/704/vcenter/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html for guest OS types.
-vm_version       = "20"                    # Refer to https://kb.vmware.com/s/article/1003746 for specific VM versions.
+vm_version       = "20"                         # Refer to https://kb.vmware.com/s/article/1003746 for specific VM versions.
 
 os_iso_path      = "[esxinuc2:datastore1] Repo/SERVER_EVAL_x64FRE_en-us.iso"
 vmtools_iso_path = "[esxinuc2:datastore1] Repo/windows.iso"
