@@ -19,8 +19,8 @@ vm_network = "DPG-Lab-LAN1"
 vm_guest_os_type = "windows9Server64Guest" # Refer to https://code.vmware.com/apis/704/vcenter/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html for guest OS types.
 vm_version       = "20"                    # Refer to https://kb.vmware.com/s/article/1003746 for specific VM versions.
 
-os_iso_path      = "[esxinuc1:datastore1] Repo/SERVER_EVAL_x64FRE_en-us.iso"
-vmtools_iso_path = "[esxinuc1:datastore1] Repo/windows.iso"
+os_iso_path      = "[esxinuc2:datastore1] Repo/SERVER_EVAL_x64FRE_en-us.iso"
+vmtools_iso_path = "[esxinuc2:datastore1] Repo/windows.iso"
 # floppy_img_path  = "[esxinuc1:datastore1] Repo/pvscsi-Windows8.flp"
 
 cpu_num   = 4
