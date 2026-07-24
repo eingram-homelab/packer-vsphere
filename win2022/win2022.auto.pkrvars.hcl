@@ -25,4 +25,4 @@ vmtools_iso_path = "[esxinuc1:datastore1] Repo/windows.iso"
 
 cpu_num   = 4
 ram       = 4096
-disk_size = 40960
+disk_size = 61440
