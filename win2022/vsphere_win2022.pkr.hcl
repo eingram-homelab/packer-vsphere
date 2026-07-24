@@ -16,17 +16,17 @@ local "ssh_password" {
 }
 
 packer {
-  required_version = ">= 1.7.4"
+  required_version = ">= 1.15.4"
 
   required_plugins {
     windows-update = {
-      version = "0.15.0"
+      version = "0.18.4"
       source  = "github.com/rgl/windows-update"
       # Github Plugin Repo https://github.com/rgl/packer-plugin-windows-update
     }
     vsphere = {
-      source  = "github.com/hashicorp/vsphere"
-      version = "~> 1"
+      source  = "github.com/vmware/vsphere"
+      version = "~> 2.2.0"
     }
   }
 }
