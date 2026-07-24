@@ -10,18 +10,17 @@ vcenter_folder     = "Templates"
 vcenter_server     = "vcsa-1.local.lan"
 vcenter_datacenter = "HomeLab Datacenter"
 vcenter_cluster    = "Intel NUC10 Cluster"
-vcenter_host       = "esxinuc1.local.lan"
-vcenter_datastore  = "esxinuc1:datastore1"
+vcenter_host       = "esxinuc2.local.lan"
+vcenter_datastore  = "esxinuc2:datastore1"
 
 vm_name    = "TMP-Win2022Core_Packer"
 vm_network = "DPG-Lab-LAN1"
 
-vm_guest_os_type = "windows9Server64Guest" # Refer to https://code.vmware.com/apis/704/vcenter/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html for guest OS types.
+vm_guest_os_type = "windows2019srvNext_64Guest" # Refer to https://code.vmware.com/apis/704/vcenter/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html for guest OS types.
 vm_version       = "20"                    # Refer to https://kb.vmware.com/s/article/1003746 for specific VM versions.
 
-os_iso_path      = "[esxinuc1:datastore1] Repo/SERVER_EVAL_x64FRE_en-us.iso"
-vmtools_iso_path = "[esxinuc1:datastore1] Repo/windows.iso"
-# floppy_img_path  = "[esxinuc1:datastore1] Repo/pvscsi-Windows8.flp"
+os_iso_path      = "[esxinuc2:datastore1] Repo/SERVER_EVAL_x64FRE_en-us.iso"
+vmtools_iso_path = "[esxinuc2:datastore1] Repo/windows.iso"
 
 cpu_num   = 4
 ram       = 4096
