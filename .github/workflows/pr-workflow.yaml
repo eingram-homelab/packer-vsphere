@@ -12,7 +12,7 @@ permissions:
 jobs:
   packer-checks:
     name: Packer PR Workflow Checks
-    uses: eingram-homelab/reusable-workflows/.github/workflows/_flattened-packer-pr-workflow-checks.yaml@main
+    uses: eingram-homelab/reusable-workflows/.github/workflows/_flattened-packer-pr-workflow.yaml@main
     with:
       repository: ${{ github.repository }}
       ref: ${{ github.head_ref || github.ref_name }}
