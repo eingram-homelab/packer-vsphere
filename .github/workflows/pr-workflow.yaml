@@ -10,7 +10,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  packer-checks:
+  flattened-packer-pr-workflow:
     name: Packer PR Workflow Checks
     uses: eingram-homelab/reusable-workflows/.github/workflows/_flattened-packer-pr-workflow.yaml@main
     with:
