@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  packer-checks:
+  flattened-packer-f-workflow:
     name: Packer Feature Branch Workflow Checks
     uses: eingram-homelab/reusable-workflows/.github/workflows/_flattened-packer-f-workflow.yaml@main
     with:
