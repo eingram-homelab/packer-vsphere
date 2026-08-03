@@ -20,7 +20,7 @@ vm_guest_os_type = "windows2019srvNext_64Guest" # Refer to https://code.vmware.c
 vm_version       = "20"                    # Refer to https://kb.vmware.com/s/article/1003746 for specific VM versions.
 
 os_iso_path      = "[esxinuc2:datastore1] Repo/SERVER_EVAL_x64FRE_en-us.iso"
-vmtools_iso_path = "[esxinuc2:datastore1] Repo/windows.iso"
+vmtools_iso_path = "[esxinuc2:datastore1] Repo/VMware-tools-windows-13.1.0-25218885.iso"
 # floppy_img_path  = "[esxinuc1:datastore1] Repo/pvscsi-Windows8.flp"
 
 cpu_num   = 4
