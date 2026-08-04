@@ -55,7 +55,7 @@ Set-Location e:
 ### 2 - Install attempt #1
 
 write-host "Starting VMware tools install first attempt 1" -ForegroundColor cyan
-Start-Process "setup64.exe" -ArgumentList '/s /v "/qb REBOOT=R"' -Wait
+Start-Process "setup.exe" -ArgumentList '/s /v "/qb REBOOT=R"' -Wait
 
 ### 3 - After the installation is finished, check to see if the 'VMTools' service enters the 'Running' state every 2 seconds for 10 seconds
 $Running = $false
@@ -106,7 +106,7 @@ if (-not $Running) {
 
   write-host "Running re-install of VMware tools install" -ForegroundColor cyan 
   #Install VMWare Tools
-  Start-Process "setup64.exe" -ArgumentList '/s /v "/qb REBOOT=R"' -Wait
+  Start-Process "setup.exe" -ArgumentList '/s /v "/qb REBOOT=R"' -Wait
 
   ### 6 - Re-check again if VMTools service has been installed and is started
 

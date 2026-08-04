@@ -20,7 +20,7 @@ vm_guest_os_type = "windows2019srvNext_64Guest"
 vm_version       = "20"
 
 os_iso_path      = "[esxinuc2:datastore1] Repo/SERVER_EVAL_x64FRE_en-us.iso"
-vmtools_iso_path = "[esxinuc2:datastore1] Repo/windows.iso"
+vmtools_iso_path = "[esxinuc2:datastore1] Repo/VMware-tools-windows-13.1.0-25218885.iso"
 
 cpu_num   = 4
 ram       = 4096
