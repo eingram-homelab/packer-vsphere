@@ -16,17 +16,17 @@ local "ssh_password" {
 }
 
 packer {
-  required_version = ">= 1.7.4"
+  required_version = ">= 1.15.4"
 
   required_plugins {
     windows-update = {
-      version = "0.15.0"
+      version = "0.18.4"
       source  = "github.com/rgl/windows-update"
       # Github Plugin Repo https://github.com/rgl/packer-plugin-windows-update
     }
     vsphere = {
-      source  = "github.com/hashicorp/vsphere"
-      version = "~> 1"
+      source  = "github.com/vmware/vsphere"
+      version = "~> 2.2.0"
     }
   }
 }
@@ -93,7 +93,7 @@ source "vsphere-iso" "win_11" {
   # floppy_files = ["unattended/autounattend.xml"]
   # floppy_files = ["unattended/autounattend.xml", "drivers/PVSCSI.CAT", "drivers/PVSCSI.INF", "drivers/PVSCSI.SYS", "drivers/TXTSETUP.OEM"]
   # floppy_img_path = var.floppy_img_path
-  boot_wait       = "3s"
+  boot_wait = "3s"
   boot_command = [
     "<spacebar><spacebar>"
   ]
