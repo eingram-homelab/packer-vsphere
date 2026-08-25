@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 try {
     # Disable password expiration for your local admin account.
     Write-Host "Setting admin account to not expire..."
-    wmic useraccount where "name='administrator'" set PasswordExpires=FALSE
+    Set-LocalUser -Name "Administrator" -PasswordNeverExpires $true
 
     # Enable RDP
     netsh advfirewall firewall add rule name="Open Port 3389" dir=in action=allow protocol=TCP localport=3389
