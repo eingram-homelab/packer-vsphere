@@ -6,38 +6,22 @@ Secrets (vCenter credentials, SSH passwords) are retrieved from HashiCorp Vault 
 
 ## Templates
 
-| Directory | OS |
+| Build directory | Image |
 |---|---|
+| `rhel85/` | RHEL 8.5 |
 | `rocky9/` | Rocky Linux 9 |
-| `rocky9_rke2/` | Rocky Linux 9 (RKE2 node) |
-| `rocky10/` | Rocky Linux 10 |
-| `rocky10_rke2/` | Rocky Linux 10 (RKE2 node) |
+| `rocky10/vcsa-1/` | Rocky Linux 10 on vCenter 1 |
+| `rocky10/vcsa-2/` | Rocky Linux 10 on vCenter 2 |
 | `ubuntu24/` | Ubuntu 24.04 |
-| `win10/` | Windows 10 |
 | `win11/` | Windows 11 |
 | `win2019/` | Windows Server 2019 |
 | `win2022/` | Windows Server 2022 |
 | `win2022-core/` | Windows Server 2022 Core |
+| `win2025-core/vcsa-2/` | Windows Server 2025 Core on vCenter 2 |
 
-## Directory Structure
+Each build directory contains its Packer template and variable declarations. Some builds also have an auto-loaded `.auto.pkrvars.hcl` file, `data/` assets, or guest customization scripts. Rocky Linux 10 and Windows Server 2025 Core configurations are nested under their vCenter-specific directories; use those paths when initializing or running Packer.
 
-Each template follows this layout:
-
-```
-<os>/
-├── vsphere_<os>.pkr.hcl        # Main build and source block
-├── variables.pkr.hcl           # Variable declarations
-├── <os>.auto.pkrvars.hcl       # Variable values (vCenter targets, ISO paths, sizing)
-├── data/
-│   └── homelab_ca.crt          # CA certificate uploaded to each VM
-└── scripts/
-    ├── env_setup.sh             # Package install and VMware Tools config
-    └── sysprep-op-*.sh          # Sysprep cleanup scripts
-```
-
-Windows templates additionally contain PowerShell scripts under `scripts/` for WinRM configuration, VMware Tools installation, and Windows customization.
-
-The repository-level `scripts/publish_template.ps1` is called by CI after a successful build to delete the old vCenter template and rename the new timestamped one.
+The repository-level `scripts/publish_template.ps1` is used by the release workflow to remove the previous vCenter template and rename the newly built timestamped VM.
 
 ## Prerequisites
 
@@ -53,13 +37,13 @@ The repository-level `scripts/publish_template.ps1` is called by CI after a succ
 Always run `packer init` before first use or after changing plugin versions:
 
 ```bash
-packer init <os>/
+packer init <build-directory>/
 ```
 
 ### Validate (syntax only — no Vault required)
 
 ```bash
-packer validate -syntax-only <os>/
+packer validate -syntax-only <build-directory>/
 ```
 
 ### Validate (full — requires Vault)
@@ -67,7 +51,7 @@ packer validate -syntax-only <os>/
 ```bash
 export VAULT_ADDR=http://vault.local.lan:8200
 export VAULT_TOKEN=<token>
-packer validate <os>/
+packer validate <build-directory>/
 ```
 
 ### Build
@@ -75,7 +59,7 @@ packer validate <os>/
 ```bash
 export VAULT_ADDR=http://vault.local.lan:8200
 export VAULT_TOKEN=<token>
-packer build <os>/
+packer build <build-directory>/
 ```
 
 After a successful build, `<os>/build-manifest.json` is written with the artifact ID and timestamped VM name (format: `<template_name>__YYYYMMDDHHmmss`).
@@ -92,17 +76,15 @@ Run `packer fmt <os>/` (without `-check`) to auto-fix formatting.
 
 | Workflow | Trigger | Action |
 |---|---|---|
-| `push-workflow.yaml` | Push to non-`main` branch (`*.pkr.hcl` changed) | Validate all changed templates |
-| `pr-workflow.yaml` | Pull request to `main` (`*.pkr.hcl` changed) | Validate all changed templates |
-| `release-workflow.yaml` | Push to `main` (`*.pkr.hcl` changed) | Build templates, verify via Terraform, publish to vCenter |
+| `f-branch-validate.yaml` | Push to any branch except `main` | Run the reusable feature-branch Packer checks |
+| `pr-workflow.yaml` | Pull request targeting `main` | Run the reusable Packer PR checks |
+| `release-workflow.yaml` | Push to `main` or manual dispatch | Run the reusable Packer release workflow |
 
-Validation runs `packer fmt -check`, `packer init`, and `packer validate` against each changed template directory. The build pipeline additionally installs `xorriso` (required for Windows ISO builds) and calls `scripts/publish_template.ps1` to promote the new template in vCenter.
+The workflows delegate to reusable workflows in [eingram-homelab/reusable-workflows](https://github.com/eingram-homelab/reusable-workflows). The release workflow builds and publishes templates; `scripts/publish_template.ps1` handles template promotion in vCenter.
 
 Workflows are self-hosted on `arc-runners` and call reusable workflows from [eingram-homelab/reusable-workflows](https://github.com/eingram-homelab/reusable-workflows).
 
-Required secrets/variables:
-- `VAULT_TOKEN` (secret)
-- `VAULT_ADDR` (Actions variable)
+The PR and release workflows pass the `VAULT_TOKEN` repository secret to their reusable workflows. Configure `VAULT_ADDR` as an Actions variable when required by the reusable workflow.
 
 ## Triggering a New Build
 
