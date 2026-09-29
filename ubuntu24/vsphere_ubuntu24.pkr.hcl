@@ -41,10 +41,10 @@ build {
   sources = ["source.vsphere-iso.ubuntu"]
 
   # Copy root ca cert to VM
-  provisioner "file" {
-    source      = "${abspath(path.root)}/data/homelab_ca.crt"
-    destination = "/etc/pki/ca-trust/source/anchors/homelab_ca.crt"
-  }
+  # provisioner "file" {
+  #   source      = "${abspath(path.root)}/data/homelab_ca.crt"
+  #   destination = "/etc/pki/ca-trust/source/anchors/homelab_ca.crt"
+  # }
 
   # Upload and execute scripts using Shell
   provisioner "shell" {
