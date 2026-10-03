@@ -50,17 +50,8 @@ build {
   provisioner "shell" {
     # execute_command = "echo 'temppassword' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'" # This runs the scripts with sudo
     scripts = [
-      "${abspath(path.root)}/scripts/env_setup.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-bash-history.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-crash-data.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-dhcp-client-state.sh",
-      #      "${abspath(path.root)}/scripts/sysprep-op-logfiles.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-machine-id.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-package-manager-cache.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-rpm-db.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-ssh-hostkeys.sh",
-      #      "${abspath(path.root)}/scripts/sysprep-op-tmp-files.sh",
-      "${abspath(path.root)}/scripts/sysprep-op-yum-uuid.sh"
+      "${abspath(path.root)}/scripts/dist-upgrade.sh",
+      "${abspath(path.root)}/scripts/sysprep-cleanall.sh"
     ]
   }
 
@@ -71,7 +62,7 @@ build {
     custom_data = {
       build_timestamp = "${formatdate("YYYY-MM-DD hh:mm:ss", timestamp())}"
       vm_name         = "${var.vsphere_template_name}__${formatdate("YYYYMMDDHHmmss", timestamp())}"
-      os_version      = "ubuntu Linux 9"
+      os_version      = "Ubuntu 26"
     }
   }
 }
@@ -82,30 +73,30 @@ source "vsphere-iso" "ubuntu" {
 
   # vCenter parameters
   insecure_connection = "true"
-  username            = "${local.vsphere_user}"
-  password            = "${local.vsphere_password}"
-  vcenter_server      = "${var.vcenter_server}"
-  cluster             = "${var.vcenter_cluster}"
-  datacenter          = "${var.vcenter_dc_name}"
-  host                = "${var.vsphere_host}"
-  datastore           = "${var.vcenter_datastore}"
-  folder              = "${var.vm_folder}"
+  username            = local.vsphere_user
+  password            = local.vsphere_password
+  vcenter_server      = var.vcenter_server
+  cluster             = var.vcenter_cluster
+  datacenter          = var.vcenter_dc_name
+  host                = var.vsphere_host
+  datastore           = var.vcenter_datastore
+  folder              = var.vm_folder
   vm_name             = "${var.vsphere_template_name}__${formatdate("YYYYMMDDHHmmss", timestamp())}"
   vm_version          = var.vm_version
   firmware            = "efi"
   convert_to_template = true
 
   # VM resource parameters 
-  guest_os_type   = "rhel9_64Guest"
-  CPUs            = "${var.cpu_num}"
+  guest_os_type   = "ubuntu64Guest"
+  CPUs            = var.cpu_num
   CPU_hot_plug    = true
-  RAM             = "${var.mem_size}"
+  RAM             = var.mem_size
   RAM_hot_plug    = true
   RAM_reserve_all = false
   notes           = "Packer build ${formatdate("YYYYMMDDHHmmss", timestamp())}."
 
   network_adapters {
-    network      = "${var.vm_network}"
+    network      = var.vm_network
     network_card = "vmxnet3"
   }
 
@@ -116,20 +107,34 @@ source "vsphere-iso" "ubuntu" {
   }
 
   iso_paths = [
-    "${var.os_iso_path}"
+    var.os_iso_path
   ]
 
   # ubuntu OS parameters
   boot_order   = "disk,cdrom,floppy"
-  boot_wait    = "10s"
   ssh_password = "temppassword"
-  ssh_username = "root"
-
+  ssh_username = "tempuser"
   #http_ip = "${var.builder_ipv4}"
   # http_directory = "/"
   # http_content = local.data_source_content
+  http_content = {
+    # "/meta-data" = file("data/meta-data")
+    # "/user-data" = templatefile("data/user-data.pkrtpl.hcl", { username = "ansible", password_encrypted = local.encrypted_password })
+  }
+  # Modified boot command from VMware's example repo https://github.com/vmware-samples/packer-examples-for-vsphere/blob/fe84fb98ef0743811ef1907851583434e8a21672/builds/linux/ubuntu/20-04-lts/linux-ubuntu.pkr.hcl#L95-L103
   boot_command = [
-    "<up>e<wait><down><wait><down><wait><end> inst.text inst.ks=http://kickstart.local.lan/ks-ubuntu9.cfg<wait><leftCtrlOn>x<leftCtrlOff><wait>"
+    "c<wait3>",
+    "linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://kickstart.local.lan/ubuntu26/\"",
+    "<enter><wait>",
+    "initrd /casper/initrd",
+    "<enter><wait>",
+    "boot",
+    "<enter>"
   ]
+
+  communicator = "ssh"
+  # ssh_handshake_attempts = var.ssh_handshake_attempts
+  # ssh_port               = var.communicator_port
+  ssh_timeout = "10m"
 }
 
